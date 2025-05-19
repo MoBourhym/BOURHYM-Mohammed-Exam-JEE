@@ -11,6 +11,7 @@ import { CreditListComponent } from './components/credit/credit-list.component';
 import { CreditDetailComponent } from './components/credit/credit-detail.component';
 import { CreditFormComponent } from './components/credit/credit-form.component';
 import { RepaymentListComponent } from './components/repayment/repayment-list.component';
+import { RepaymentFormComponent } from './components/repayment/repayment-form.component';
 
 export const routes: Routes = [
   {
@@ -33,7 +34,10 @@ export const routes: Routes = [
       { path: 'credits/:id', component: CreditDetailComponent },
       
       // Repayment routes
-      { path: 'repayments', component: RepaymentListComponent }
+      { path: 'repayments', component: RepaymentListComponent },
+      { path: 'credits/:creditId/repayments', component: RepaymentListComponent },
+      { path: 'credits/:creditId/repayments/new', component: RepaymentFormComponent },
+      { path: 'credits/:creditId/repayments/:id', component: RepaymentFormComponent }
     ]
   },
   {

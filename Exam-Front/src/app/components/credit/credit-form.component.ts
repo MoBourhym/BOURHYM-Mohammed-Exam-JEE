@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ClientService } from '../../services/client.service';
 import { CreditService } from '../../services/credit.service';
 import { Client } from '../../models/client.model';
@@ -76,6 +76,7 @@ import { ProfessionalCredit } from '../../models/professional-credit.model';
               <div *ngIf="submitted && f['amount'].errors" class="text-danger">
                 <small *ngIf="f['amount'].errors['required']">Amount is required</small>
                 <small *ngIf="f['amount'].errors['min']">Amount must be greater than 0</small>
+                <small *ngIf="f['amount'].errors['pattern']">Amount must be a valid number with up to 2 decimal places</small>
               </div>
             </div>
             
@@ -91,6 +92,7 @@ import { ProfessionalCredit } from '../../models/professional-credit.model';
               <div *ngIf="submitted && f['duration'].errors" class="text-danger">
                 <small *ngIf="f['duration'].errors['required']">Duration is required</small>
                 <small *ngIf="f['duration'].errors['min']">Duration must be at least 1 month</small>
+                <small *ngIf="f['duration'].errors['max']">Duration must not exceed 360 months</small>
               </div>
             </div>
           </div>
@@ -112,6 +114,7 @@ import { ProfessionalCredit } from '../../models/professional-credit.model';
               <div *ngIf="submitted && f['interestRate'].errors" class="text-danger">
                 <small *ngIf="f['interestRate'].errors['required']">Interest rate is required</small>
                 <small *ngIf="f['interestRate'].errors['min']">Interest rate must be greater than 0</small>
+                <small *ngIf="f['interestRate'].errors['max']">Interest rate must not exceed 30%</small>
               </div>
             </div>
             
@@ -125,6 +128,7 @@ import { ProfessionalCredit } from '../../models/professional-credit.model';
               >
               <div *ngIf="submitted && f['startDate'].errors" class="text-danger">
                 <small *ngIf="f['startDate'].errors['required']">Start date is required</small>
+                <small *ngIf="f['startDate'].errors['pastDate']">Start date cannot be in the past</small>
               </div>
             </div>
           </div>
@@ -216,15 +220,48 @@ export class CreditFormComponent implements OnInit {
     private creditService: CreditService,
     private router: Router
   ) {
-    // Initialize with common fields
+    // Initialize with common fields and enhanced validation
     this.creditForm = this.formBuilder.group({
       type: ['', Validators.required],
       clientId: ['', Validators.required],
-      amount: [null, [Validators.required, Validators.min(0.01)]],
-      duration: [null, [Validators.required, Validators.min(1)]],
-      interestRate: [null, [Validators.required, Validators.min(0.001)]],
-      startDate: [new Date().toISOString().split('T')[0], Validators.required]
+      amount: [null, [
+        Validators.required, 
+        Validators.min(1),
+        Validators.pattern(/^\d+(\.\d{1,2})?$/) // Allow only numbers with up to 2 decimal places
+      ]],
+      duration: [null, [
+        Validators.required, 
+        Validators.min(1),
+        Validators.max(360) // Maximum 30 years (in months)
+      ]],
+      interestRate: [null, [
+        Validators.required, 
+        Validators.min(0.01),
+        Validators.max(30) // Maximum reasonable interest rate
+      ]],
+      startDate: [new Date().toISOString().split('T')[0], [
+        Validators.required,
+        this.futureDateValidator()
+      ]]
     });
+  }
+
+  // Custom validator to ensure date is not in the past
+  futureDateValidator() {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const inputDate = new Date(control.value);
+      const today = new Date();
+      
+      // Reset hours to compare only dates
+      today.setHours(0, 0, 0, 0);
+      inputDate.setHours(0, 0, 0, 0);
+      
+      if (inputDate < today) {
+        return { 'pastDate': true };
+      }
+      
+      return null;
+    };
   }
   
   ngOnInit(): void {

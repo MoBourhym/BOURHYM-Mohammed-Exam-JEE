@@ -27,7 +27,7 @@ import { Client } from '../../models/client.model';
           <input 
             type="text" 
             class="form-control" 
-            placeholder="Search clients by name..." 
+            placeholder="Search clients by first or last name..." 
             [formControl]="searchControl"
           >
         </div>
@@ -56,7 +56,7 @@ import { Client } from '../../models/client.model';
           <tbody>
             <tr *ngFor="let client of clients">
               <td>{{ client.id }}</td>
-              <td>{{ client.name }}</td>
+              <td>{{ client.firstName }} {{ client.lastName }}</td>
               <td>{{ client.email }}</td>
               <td>
                 <div class="btn-group" role="group">
