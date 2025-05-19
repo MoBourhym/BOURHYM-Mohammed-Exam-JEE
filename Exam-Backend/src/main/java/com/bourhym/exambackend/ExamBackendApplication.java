@@ -100,8 +100,13 @@ public class ExamBackendApplication {
             System.out.println("===== TEST DES REQUÊTES PERSONNALISÉES =====");
 
             System.out.println("Recherche de client par email :");
-            clientRepository.findByEmail("jean.dupont@example.com")
+            clientRepository.findFirstByEmail("jean.dupont@example.com")
                     .ifPresent(c -> System.out.println("Client trouvé : " + c.getName()));
+
+            // Alternative pour montrer tous les clients avec cet email
+            System.out.println("\nListe des clients avec cet email :");
+            clientRepository.findByEmail("jean.dupont@example.com")
+                    .forEach(c -> System.out.println("Client trouvé : " + c.getName() + ", ID: " + c.getId()));
 
             System.out.println("\nListe des crédits acceptés :");
             creditRepository.findByStatus(CreditStatus.ACCEPTED)

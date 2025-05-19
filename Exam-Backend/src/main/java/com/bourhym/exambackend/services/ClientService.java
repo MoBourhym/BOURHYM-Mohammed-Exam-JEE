@@ -64,8 +64,20 @@ public class ClientService {
      */
     @Transactional(readOnly = true)
     public Optional<ClientDTO> getClientByEmail(String email) {
-        return clientRepository.findByEmail(email)
+        return clientRepository.findFirstByEmail(email)
                 .map(clientMapper::toDto);
+    }
+
+    /**
+     * Récupère tous les clients avec un email spécifique.
+     *
+     * @param email L'email des clients à rechercher
+     * @return Liste des clients ayant cet email
+     */
+    @Transactional(readOnly = true)
+    public List<ClientDTO> getAllClientsByEmail(String email) {
+        List<Client> clients = clientRepository.findByEmail(email);
+        return clientMapper.toDto(clients);
     }
 
     /**

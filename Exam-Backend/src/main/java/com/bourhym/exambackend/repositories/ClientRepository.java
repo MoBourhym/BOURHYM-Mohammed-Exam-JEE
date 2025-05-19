@@ -8,8 +8,11 @@ import java.util.Optional;
 
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
-    // Rechercher un client par son email
-    Optional<Client> findByEmail(String email);
+    // Rechercher des clients par email (peut retourner plusieurs résultats)
+    List<Client> findByEmail(String email);
+
+    // Rechercher le premier client avec un email donné (en cas de doublons)
+    Optional<Client> findFirstByEmail(String email);
 
     // Rechercher des clients dont le nom contient une chaîne de caractères (insensible à la casse)
     List<Client> findByNameContainingIgnoreCase(String name);
