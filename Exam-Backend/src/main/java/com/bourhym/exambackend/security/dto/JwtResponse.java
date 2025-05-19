@@ -1,6 +1,6 @@
 package com.bourhym.exambackend.security.dto;
 
-import com.bourhym.exambackend.enums.Role;
+import com.bourhym.exambackend.security.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

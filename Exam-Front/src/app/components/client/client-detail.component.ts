@@ -5,11 +5,12 @@ import { ClientService } from '../../services/client.service';
 import { CreditService } from '../../services/credit.service';
 import { Client } from '../../models/client.model';
 import { Credit } from '../../models/credit.model';
+import { ErrorMessageComponent } from '../shared/error-message.component';
 
 @Component({
   selector: 'app-client-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ErrorMessageComponent],
   template: `
     <div *ngIf="loading" class="text-center my-5">
       <div class="spinner-border" role="status">
@@ -17,7 +18,7 @@ import { Credit } from '../../models/credit.model';
       </div>
     </div>
     
-    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+    <app-error-message [message]="error"></app-error-message>
     
     <div *ngIf="client && !loading">
       <div class="d-flex justify-content-between align-items-center mb-4">
@@ -34,8 +35,25 @@ import { Credit } from '../../models/credit.model';
       
       <div class="card mb-4">
         <div class="card-body">
-          <h5 class="card-title">{{ client.name }}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">{{ client.email }}</h6>
+          <div class="row">
+            <div class="col-md-6">
+              <h5 class="card-title">{{ client.firstName }} {{ client.lastName }}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">{{ client.email }}</h6>
+              <div class="mt-3">
+                <p><strong>Phone:</strong> {{ client.phone }}</p>
+                <p><strong>Address:</strong> {{ client.address }}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex flex-column h-100 justify-content-center">
+                <div class="bg-light p-3 rounded">
+                  <h6 class="mb-2">Client Information</h6>
+                  <p class="mb-1"><i class="bi bi-person"></i> ID: {{ client.id }}</p>
+                  <p class="mb-0 text-muted"><small>Details last updated: {{ getFormattedDate() }}</small></p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       
@@ -186,5 +204,13 @@ export class ClientDetailComponent implements OnInit {
       default:
         return 'bg-warning';
     }
+  }
+  
+  getFormattedDate(): string {
+    return new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
   }
 }

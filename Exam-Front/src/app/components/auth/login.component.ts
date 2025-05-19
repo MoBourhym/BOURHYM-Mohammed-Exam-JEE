@@ -3,15 +3,16 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { ErrorMessageComponent } from '../shared/error-message.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ErrorMessageComponent],
   template: `
     <h3 class="text-center mb-4">Login</h3>
 
-    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+    <app-error-message [message]="error"></app-error-message>
     
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="mb-3">
@@ -25,6 +26,9 @@ import { AuthService } from '../../services/auth.service';
         />
         <div *ngIf="submitted && f['username'].errors" class="invalid-feedback">
           <div *ngIf="f['username'].errors['required']">Username is required</div>
+          <div *ngIf="f['username'].errors['minlength']">Username must be at least 3 characters</div>
+          <div *ngIf="f['username'].errors['maxlength']">Username cannot exceed 25 characters</div>
+          <div *ngIf="f['username'].errors['pattern']">Username can only contain letters, numbers, dots, underscores and hyphens</div>
         </div>
       </div>
       
@@ -39,6 +43,8 @@ import { AuthService } from '../../services/auth.service';
         />
         <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
           <div *ngIf="f['password'].errors['required']">Password is required</div>
+          <div *ngIf="f['password'].errors['minlength']">Password must be at least 6 characters</div>
+          <div *ngIf="f['password'].errors['pattern']">Password must include uppercase, lowercase, number and special character</div>
         </div>
       </div>
       
@@ -64,8 +70,17 @@ export class LoginComponent {
     private router: Router
   ) {
     this.loginForm = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required]
+      username: ['', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(25),
+        Validators.pattern(/^[a-zA-Z0-9._-]+$/)
+      ]],
+      password: ['', [
+        Validators.required,
+        Validators.minLength(6),
+        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)
+      ]]
     });
   }
   

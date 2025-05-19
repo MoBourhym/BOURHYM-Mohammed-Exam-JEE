@@ -1,6 +1,6 @@
-package com.bourhym.exambackend.entities;
+package com.bourhym.exambackend.security.entities;
 
-import com.bourhym.exambackend.enums.Role;
+import com.bourhym.exambackend.security.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,9 +1,9 @@
 package com.bourhym.exambackend.security;
 
-import com.bourhym.exambackend.entities.User;
-import com.bourhym.exambackend.enums.Role;
+import com.bourhym.exambackend.security.entities.User;
+import com.bourhym.exambackend.security.enums.Role;
 import com.bourhym.exambackend.exceptions.ResourceNotFoundException;
-import com.bourhym.exambackend.repositories.UserRepository;
+import com.bourhym.exambackend.security.repositories.UserRepository;
 import com.bourhym.exambackend.security.dto.JwtResponse;
 import com.bourhym.exambackend.security.dto.LoginRequest;
 import com.bourhym.exambackend.security.dto.RegisterRequest;

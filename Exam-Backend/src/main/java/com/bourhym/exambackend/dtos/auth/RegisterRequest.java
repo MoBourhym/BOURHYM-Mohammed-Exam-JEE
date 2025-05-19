@@ -1,6 +1,6 @@
 package com.bourhym.exambackend.dtos.auth;
 
-import com.bourhym.exambackend.enums.Role;
+import com.bourhym.exambackend.security.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

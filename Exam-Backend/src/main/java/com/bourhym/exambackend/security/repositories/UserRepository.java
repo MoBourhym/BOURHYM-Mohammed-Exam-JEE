@@ -1,6 +1,6 @@
-package com.bourhym.exambackend.repositories;
+package com.bourhym.exambackend.security.repositories;
 
-import com.bourhym.exambackend.entities.User;
+import com.bourhym.exambackend.security.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

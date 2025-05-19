@@ -1,4 +1,4 @@
-package com.bourhym.exambackend.enums;
+package com.bourhym.exambackend.security.enums;
 
 public enum Role {
     ROLE_CLIENT,
