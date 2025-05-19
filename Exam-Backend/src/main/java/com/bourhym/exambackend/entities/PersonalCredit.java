@@ -1,4 +1,4 @@
-package com.banking.credit.entities;
+package com.bourhym.exambackend.entities;
 
 import com.bourhym.exambackend.entities.Credit;
 import jakarta.persistence.DiscriminatorValue;
