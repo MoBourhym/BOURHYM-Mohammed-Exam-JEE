@@ -1,0 +1,20 @@
+package com.bourhym.exambackend.dtos.auth;
+
+import com.bourhym.exambackend.enums.Role;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class JwtResponse {
+    private String token;
+    private String type = "Bearer";
+    private Long id;
+    private String username;
+    private String email;
+    private Role role;
+}

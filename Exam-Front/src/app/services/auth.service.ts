@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { ErrorService } from './error.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,11 +10,12 @@ import { Router } from '@angular/router';
 export class AuthService {
   private currentUserSubject = new BehaviorSubject<any>(null);
   public currentUser$: Observable<any> = this.currentUserSubject.asObservable();
-  private apiUrl = '/api/auth';
+  private apiUrl = 'http://localhost:8085/api/auth';
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private errorService: ErrorService
   ) {
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
@@ -22,25 +24,16 @@ export class AuthService {
   }
 
   login(username: string, password: string): Observable<any> {
-    // In a real application, this would communicate with a backend API
-    // For now, we'll mock the authentication process
-    return new Observable(observer => {
-      // Mock successful login for demo purposes
-      if (username && password) {
-        const user = {
-          id: 1,
-          username,
-          token: 'mock-jwt-token'
-        };
-        
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        this.currentUserSubject.next(user);
-        observer.next(user);
-        observer.complete();
-      } else {
-        observer.error({ message: 'Username or password is incorrect' });
-      }
-    });
+    return this.http.post<any>(`${this.apiUrl}/login`, { username, password })
+      .pipe(
+        catchError(error => this.errorService.handleError(error)),
+        map(user => {
+          // Store user details and JWT token in local storage to keep user logged in between page refreshes
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          this.currentUserSubject.next(user);
+          return user;
+        })
+      );
   }
 
   logout(): void {
