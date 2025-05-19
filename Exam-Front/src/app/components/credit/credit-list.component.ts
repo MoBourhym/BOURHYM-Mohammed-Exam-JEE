@@ -155,7 +155,7 @@ export class CreditListComponent implements OnInit {
     
     this.filteredCredits = this.credits.filter(credit => {
       const matchesStatus = !statusValue || credit.status === statusValue;
-      const matchesType = !typeValue || credit.type === typeValue;
+      const matchesType = !typeValue || (credit as any).type === typeValue;
       return matchesStatus && matchesType;
     });
   }

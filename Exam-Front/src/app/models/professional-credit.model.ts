@@ -1,9 +1,9 @@
 import { Credit } from './credit.model';
 
 export class ProfessionalCredit extends Credit {
-  type: string = 'PROFESSIONAL';
-  reason: string;
-  companyName: string;
+  override type: string = 'PROFESSIONAL';
+  reason!: string;
+  companyName!: string;
   
   constructor(data: any) {
     super();

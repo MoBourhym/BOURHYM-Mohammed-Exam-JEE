@@ -17,10 +17,11 @@ export enum RepaymentType {
 
 export abstract class Credit {
   id?: number;
-  amount: number;
-  duration: number;
-  interestRate: number;
-  startDate: Date;
-  clientId: number;
-  status: CreditStatus;
+  amount!: number;
+  duration!: number;
+  interestRate!: number;
+  startDate!: Date;
+  clientId!: number;
+  status!: CreditStatus;
+  type?: string;
 }
